@@ -1,5 +1,6 @@
 import streamlit as st
 import sqlite3
+from locations import HYDERABAD_AREAS
 
 st.set_page_config(
     page_title="Community Feed",
@@ -10,11 +11,33 @@ st.title("🏘️ Community Feed")
 
 st.write("View nearby help requests from your community.")
 
-# Connect to database
+# --------------------
+# FILTERS
+# --------------------
+
+search = st.text_input(
+    "🔍 Search Requests"
+)
+
+selected_area = st.selectbox(
+    "📍 Filter by Area",
+    ["All Areas"] + HYDERABAD_AREAS
+)
+
+selected_urgency = st.selectbox(
+    "⚡ Filter by Urgency",
+    ["All", "Low", "Medium", "High"]
+)
+
+st.write("---")
+
+# --------------------
+# DATABASE
+# --------------------
+
 conn = sqlite3.connect("neighborhelp.db")
 cursor = conn.cursor()
 
-# Get all requests
 cursor.execute("""
 SELECT
 title,
@@ -30,17 +53,55 @@ requests = cursor.fetchall()
 
 conn.close()
 
-if not requests:
-    st.info("No requests available yet.")
+# --------------------
+# DISPLAY REQUESTS
+# --------------------
+
+filtered_requests = []
+
+for request in requests:
+
+    title, category, help_type, location, urgency = request
+
+    # Search Filter
+    if search:
+        if search.lower() not in title.lower() and \
+           search.lower() not in category.lower() and \
+           search.lower() not in help_type.lower():
+            continue
+
+    # Area Filter
+    if selected_area != "All Areas":
+        if not location.startswith(selected_area):
+            continue
+
+    # Urgency Filter
+    if selected_urgency != "All":
+        if urgency != selected_urgency:
+            continue
+
+    filtered_requests.append(request)
+
+# --------------------
+# SHOW RESULTS
+# --------------------
+
+if not filtered_requests:
+    st.info("No matching requests found.")
+
 else:
 
-    for request in requests:
+    st.success(
+        f"Found {len(filtered_requests)} request(s)"
+    )
+
+    for request in filtered_requests:
 
         title, category, help_type, location, urgency = request
 
         if urgency == "High":
-            st.error(
-                f"""
+
+            st.error(f"""
 📌 {title}
 
 🏷️ Category: {category}
@@ -50,12 +111,11 @@ else:
 📍 Location: {location}
 
 ⚡ Urgency: {urgency}
-"""
-            )
+""")
 
         elif urgency == "Medium":
-            st.warning(
-                f"""
+
+            st.warning(f"""
 📌 {title}
 
 🏷️ Category: {category}
@@ -65,12 +125,11 @@ else:
 📍 Location: {location}
 
 ⚡ Urgency: {urgency}
-"""
-            )
+""")
 
         else:
-            st.success(
-                f"""
+
+            st.success(f"""
 📌 {title}
 
 🏷️ Category: {category}
@@ -80,5 +139,4 @@ else:
 📍 Location: {location}
 
 ⚡ Urgency: {urgency}
-"""
-            )
+""")

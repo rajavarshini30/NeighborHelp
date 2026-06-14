@@ -6,9 +6,9 @@ conn = sqlite3.connect("neighborhelp.db")
 # Create cursor
 cursor = conn.cursor()
 
-# -----------------------------
+# =====================================
 # REQUESTS TABLE
-# -----------------------------
+# =====================================
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS requests (
@@ -23,9 +23,9 @@ CREATE TABLE IF NOT EXISTS requests (
 )
 """)
 
-# -----------------------------
+# =====================================
 # OFFERS TABLE
-# -----------------------------
+# =====================================
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS offers (
@@ -38,10 +38,45 @@ CREATE TABLE IF NOT EXISTS offers (
 )
 """)
 
-# Save changes
+# =====================================
+# COMMUNITIES TABLE
+# =====================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS communities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    community_name TEXT,
+    community_type TEXT,
+    contact_person TEXT,
+    phone TEXT,
+    email TEXT,
+    plan TEXT
+)
+""")
+
+# =====================================
+# RATINGS TABLE
+# =====================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS ratings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    helper_name TEXT,
+    rating INTEGER,
+    feedback TEXT
+)
+""")
+
+# =====================================
+# SAVE CHANGES
+# =====================================
+
 conn.commit()
 
-# Close connection
+# =====================================
+# CLOSE DATABASE
+# =====================================
+
 conn.close()
 
 print("✅ Database Created Successfully!")

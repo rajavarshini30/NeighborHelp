@@ -1,8 +1,15 @@
 import streamlit as st
+from locations import HYDERABAD_AREAS
 
-st.set_page_config(page_title="Emergency Assistance", page_icon="🚨")
+st.set_page_config(
+    page_title="Emergency Assistance",
+    page_icon="🚨"
+)
 
-# Styling
+# ---------------------------
+# STYLING
+# ---------------------------
+
 st.markdown("""
 <style>
 
@@ -20,13 +27,20 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ---------------------------
+# PAGE TITLE
+# ---------------------------
+
 st.title("🚨 Emergency Assistance")
 
 st.warning(
     "Use this section only for urgent situations requiring immediate community support."
 )
 
-# Emergency Type
+# ---------------------------
+# EMERGENCY TYPE
+# ---------------------------
+
 emergency_type = st.selectbox(
     "🚨 Emergency Type",
     [
@@ -35,151 +49,68 @@ emergency_type = st.selectbox(
         "Vehicle Breakdown",
         "Safety Concern",
         "Pet Emergency",
+        "Hospital Assistance",
         "Other"
     ]
 )
 
-# Hyderabad Areas & Locations
-locations = {
+# ---------------------------
+# PRIORITY
+# ---------------------------
 
-    "Habsiguda": [
-        "Habsiguda Metro Station",
-        "NGRI",
-        "Osmania University Gate",
-        "CCPL Mall",
-        "More Supermarket",
-        "Street No 8",
-        "Other"
-    ],
+priority = st.radio(
+    "⚡ Priority Level",
+    ["Low", "Medium", "High"],
+    horizontal=True
+)
 
-    "Uppal": [
-        "Uppal Metro Station",
-        "Uppal Bus Depot",
-        "Rajiv Gandhi Stadium",
-        "Asian Mall",
-        "Survey of India",
-        "Other"
-    ],
-
-    "Tarnaka": [
-        "Tarnaka Metro Station",
-        "OU Main Gate",
-        "St Ann's College",
-        "Tarnaka Cross Roads",
-        "Other"
-    ],
-
-    "Mallapur": [
-        "Mallapur X Road",
-        "Shakti Sai Nagar",
-        "Mallapur Industrial Area",
-        "Mallapur Bus Stop",
-        "Other"
-    ],
-
-    "Nacharam": [
-        "Nacharam Mall",
-        "HMT Nagar",
-        "Ramanthapur Road",
-        "Nacharam Bus Stop",
-        "Other"
-    ],
-
-    "Boduppal": [
-        "Boduppal Kaman",
-        "Boduppal Main Road",
-        "Ambedkar Nagar",
-        "Other"
-    ],
-
-    "LB Nagar": [
-        "LB Nagar Metro Station",
-        "LB Nagar Junction",
-        "Kamineni Hospital",
-        "Other"
-    ],
-
-    "Dilsukhnagar": [
-        "Dilsukhnagar Metro",
-        "Konark Theatre",
-        "Chaitanyapuri",
-        "Other"
-    ],
-
-    "Ameerpet": [
-        "Ameerpet Metro",
-        "Satyam Theatre",
-        "Punjagutta Road",
-        "Other"
-    ],
-
-    "Kukatpally": [
-        "KPHB",
-        "Forum Mall",
-        "JNTU",
-        "Other"
-    ],
-
-    "Madhapur": [
-        "Madhapur Police Station",
-        "Inorbit Mall",
-        "Cyber Towers",
-        "Other"
-    ],
-
-    "Hitech City": [
-        "Cyber Towers",
-        "Mindspace",
-        "Google Office",
-        "Other"
-    ],
-
-    "Gachibowli": [
-        "Gachibowli Stadium",
-        "DLF",
-        "Financial District",
-        "Other"
-    ],
-
-    "Banjara Hills": [
-        "Road No 1",
-        "Road No 12",
-        "GVK Mall",
-        "Other"
-    ],
-
-    "Himayat Nagar": [
-        "Liberty Circle",
-        "Minerva Coffee Shop",
-        "St Paul's School",
-        "Other"
-    ]
-}
+# ---------------------------
+# LOCATION
+# ---------------------------
 
 st.subheader("📍 Location Details")
 
 area = st.selectbox(
-    "Select Area",
-    list(locations.keys())
+    "Select Hyderabad Area",
+    HYDERABAD_AREAS
 )
 
-exact_location = st.selectbox(
-    "Select Exact Location",
-    locations[area]
+exact_location = st.text_input(
+    "Apartment / Landmark / Hotel / Street",
+    placeholder="Example: Shakti Sai Nagar, Plot 91"
 )
 
-custom_location = ""
+# ---------------------------
+# CONTACT NUMBER
+# ---------------------------
 
-if exact_location == "Other":
-    custom_location = st.text_input(
-        "✏️ Enter Exact Location",
-        placeholder="Example: ABC Hotel, Street No 4"
-    )
+phone = st.text_input(
+    "📞 Contact Number",
+    max_chars=10,
+    placeholder="10 Digit Mobile Number"
+)
+
+phone_valid = (
+    phone.isdigit() and len(phone) == 10
+    if phone
+    else False
+)
+
+if phone and not phone_valid:
+    st.error("❌ Phone Number must contain exactly 10 digits.")
+
+# ---------------------------
+# DESCRIPTION
+# ---------------------------
 
 description = st.text_area(
     "📝 Describe the Emergency",
-    placeholder="Provide details of the emergency..."
+    placeholder="Provide complete details of the emergency..."
 )
+
+# ---------------------------
+# RADIUS
+# ---------------------------
 
 radius = st.slider(
     "📏 Alert Radius (KM)",
@@ -188,21 +119,29 @@ radius = st.slider(
     value=3
 )
 
+# ---------------------------
+# SUBMIT BUTTON
+# ---------------------------
+
 if st.button("🚨 SEND EMERGENCY ALERT"):
 
-    st.error("Emergency Alert Sent Successfully!")
+    if not phone_valid:
+        st.error("❌ Enter a valid 10-digit phone number.")
+        st.stop()
 
-    st.markdown("### Emergency Summary")
+    location = f"{area} - {exact_location}"
+
+    st.error("🚨 Emergency Alert Sent Successfully!")
+
+    st.markdown("## 📋 Emergency Summary")
 
     st.write("🚨 Emergency Type:", emergency_type)
-
-    st.write("📍 Area:", area)
-
-    if exact_location == "Other":
-        st.write("📌 Exact Location:", custom_location)
-    else:
-        st.write("📌 Exact Location:", exact_location)
-
+    st.write("⚡ Priority Level:", priority)
+    st.write("📍 Location:", location)
+    st.write("📞 Contact Number:", phone)
     st.write("📏 Alert Radius:", radius, "KM")
-
     st.write("📝 Description:", description)
+
+    st.success(
+        "Nearby community members within the selected radius have been notified."
+    )
