@@ -17,6 +17,10 @@ automatically appear here.
 
 st.write("---")
 
+# ==========================
+# FILTER
+# ==========================
+
 community_filter = st.selectbox(
     "Filter Community Type",
     [
@@ -29,6 +33,10 @@ community_filter = st.selectbox(
 )
 
 st.write("---")
+
+# ==========================
+# LOAD COMMUNITIES
+# ==========================
 
 conn = sqlite3.connect("neighborhelp.db")
 cursor = conn.cursor()
@@ -46,7 +54,14 @@ communities = cursor.fetchall()
 
 conn.close()
 
-if len(communities) == 0:
+# ==========================
+# DISPLAY COMMUNITIES
+# ==========================
+
+st.subheader("🏘️ Subscribed Communities")
+
+if not communities:
+
     st.info("No subscribed communities yet.")
 
 else:
@@ -68,6 +83,10 @@ else:
 """)
 
 st.write("---")
+
+# ==========================
+# SEARCH
+# ==========================
 
 st.subheader("🔍 Search Community")
 
@@ -98,78 +117,9 @@ if search:
 
 st.write("---")
 
-if st.button("🚀 Join Community"):
-    st.success(
-        "Join request submitted successfully!"
-    )
-
-st.write("---")
-
-group_type = st.selectbox(
-    "Select Community Type",
-    [
-        "Apartment",
-        "Residential Colony",
-        "Student Hostel"
-    ]
-)
-
-st.write("---")
-
-st.subheader("Available Communities")
-
-st.success("""
-🏢 Shakti Sai Nagar
-
-📍 Mallapur
-
-👥 Members: 120
-
-✅ Subscription Active
-""")
-
-st.info("""
-🏢 Green Valley Residency
-
-📍 Kompally
-
-👥 Members: 85
-
-✅ Subscription Active
-""")
-
-st.warning("""
-🏫 ABC Student Hostel
-
-📍 Gachibowli
-
-👥 Members: 45
-
-🔒 Subscription Required
-""")
-
-st.info("""
-🏘️ Sunshine Colony
-
-📍 Habsiguda
-
-👥 Members: 200
-
-✅ Subscription Active
-""")
-
-st.write("---")
-
-community_name = st.text_input(
-    "Search Community"
-)
-
-if st.button("🔍 Search"):
-    st.success(
-        f"Searching for: {community_name}"
-    )
-
-st.write("---")
+# ==========================
+# PLANS
+# ==========================
 
 st.subheader("💰 Subscription Plans")
 
@@ -204,7 +154,20 @@ Unlimited Members
 
 st.write("---")
 
-if st.button("🚀 Join Community"):
+# ==========================
+# JOIN BUTTON
+# ==========================
+
+if st.button(
+    "🚀 Join Community",
+    key="join_community"
+):
     st.success(
-        "Join request sent successfully!"
+        "Join request submitted successfully!"
     )
+
+st.write("---")
+
+st.caption(
+    "NeighborHelp © 2026 | Community Support Platform"
+)

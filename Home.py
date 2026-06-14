@@ -7,12 +7,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------------
-# DATABASE
-# ---------------------------
+# =====================================
+# DATABASE DATA
+# =====================================
 
 request_count = 0
 offer_count = 0
+
 recent_requests = []
 recent_offers = []
 
@@ -52,11 +53,12 @@ try:
     conn.close()
 
 except Exception as e:
+
     st.error(f"Database Error: {e}")
 
-# ---------------------------
+# =====================================
 # HEADER
-# ---------------------------
+# =====================================
 
 st.title("🤝 NeighborHelp")
 
@@ -64,11 +66,31 @@ st.markdown("""
 ### Helping Neighbors, Building Communities
 """)
 
+st.success("""
+🏘️ Welcome to NeighborHelp
+
+A hyperlocal community platform where neighbors can:
+
+📝 Request Help
+
+🤲 Offer Services
+
+🚨 Send Emergency Alerts
+
+💬 Direct Help Chat
+
+⭐ Build Trust Through Ratings
+
+🏢 Join Community Groups
+""")
+
 st.write("---")
 
-# ---------------------------
+# =====================================
 # QUICK ACCESS
-# ---------------------------
+# =====================================
+
+st.subheader("⚡ Quick Access")
 
 col1, col2 = st.columns(2)
 
@@ -88,9 +110,9 @@ with col4:
 
 st.write("---")
 
-# ---------------------------
-# LIVE STATS
-# ---------------------------
+# =====================================
+# LIVE STATISTICS
+# =====================================
 
 st.subheader("📊 Live Statistics")
 
@@ -116,9 +138,9 @@ with c3:
 
 st.write("---")
 
-# ---------------------------
+# =====================================
 # RECENT REQUESTS
-# ---------------------------
+# =====================================
 
 st.subheader("📝 Recent Requests")
 
@@ -126,68 +148,100 @@ if recent_requests:
 
     for title, location in recent_requests:
 
-        st.success(
-            f"📌 {title}\n\n📍 {location}"
-        )
+        st.success(f"""
+📌 {title}
+
+📍 {location}
+""")
 
 else:
+
     st.info("No requests available.")
 
 st.write("---")
 
-# ---------------------------
+# =====================================
 # RECENT OFFERS
-# ---------------------------
+# =====================================
 
 st.subheader("🤲 Recent Offers")
 
 if recent_offers:
 
-    for title, location in recent_offers:
+    for title, area in recent_offers:
 
-        st.info(
-            f"📌 {title}\n\n📍 {location}"
-        )
+        st.info(f"""
+📌 {title}
+
+📍 {area}
+""")
 
 else:
+
     st.info("No offers available.")
 
 st.write("---")
 
-# ---------------------------
+# =====================================
 # ACTIVE COMMUNITIES
-# ---------------------------
+# =====================================
 
 st.subheader("🏘️ Active Communities")
 
-st.success("🏢 Shakti Sai Nagar")
-st.info("🏢 Green Valley Residency")
-st.warning("🏫 ABC Student Hostel")
+st.success("""
+🏢 Shakti Sai Nagar
+
+📍 Mallapur
+""")
+
+st.info("""
+🏢 Green Valley Residency
+
+📍 Kompally
+""")
+
+st.warning("""
+🏫 ABC Student Hostel
+
+📍 Gachibowli
+""")
 
 st.write("---")
 
-# ---------------------------
+# =====================================
 # COMMUNITY HEROES
-# ---------------------------
+# =====================================
 
 st.subheader("🌟 Community Heroes")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.success("🥇 Community Hero")
+    st.success("""
+🥇 Community Hero
+
+50+ Successful Helps
+""")
 
 with col2:
-    st.info("🤝 Trusted Neighbor")
+    st.info("""
+🤝 Trusted Neighbor
+
+4.5+ Average Rating
+""")
 
 with col3:
-    st.warning("🚨 Emergency Responder")
+    st.warning("""
+🚨 Emergency Responder
+
+10+ Emergency Assists
+""")
 
 st.write("---")
 
-# ---------------------------
+# =====================================
 # FEATURES
-# ---------------------------
+# =====================================
 
 st.subheader("📍 Platform Features")
 
@@ -202,13 +256,20 @@ st.markdown("""
 
 ✅ Community Groups
 
-✅ Subscriptions
+✅ Direct Help Chat
 
 ✅ Ratings & Trust Score
 
+✅ Subscription Plans
+
 ✅ Hyperlocal Support
 """)
+
 st.write("---")
+
+# =====================================
+# FOOTER
+# =====================================
 
 st.caption(
     "NeighborHelp © 2026 | Community Support Platform"
