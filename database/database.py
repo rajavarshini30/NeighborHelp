@@ -1,9 +1,11 @@
 import sqlite3
 
-# Connect to database
+# =====================================
+# CONNECT DATABASE
+# =====================================
+
 conn = sqlite3.connect("neighborhelp.db")
 
-# Create cursor
 cursor = conn.cursor()
 
 # =====================================
@@ -68,6 +70,20 @@ CREATE TABLE IF NOT EXISTS ratings (
 """)
 
 # =====================================
+# DIRECT CHAT TABLE
+# =====================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    requester TEXT,
+    helper TEXT,
+    sender TEXT,
+    message TEXT
+)
+""")
+
+# =====================================
 # SAVE CHANGES
 # =====================================
 
@@ -79,4 +95,4 @@ conn.commit()
 
 conn.close()
 
-print("✅ Database Created Successfully!")
+print("✅ NeighborHelp Database Updated Successfully!")

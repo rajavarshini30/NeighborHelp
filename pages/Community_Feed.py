@@ -11,9 +11,11 @@ st.title("🏘️ Community Feed")
 
 st.write("View nearby help requests from your community.")
 
-# --------------------
+st.write("---")
+
+# =========================
 # FILTERS
-# --------------------
+# =========================
 
 search = st.text_input(
     "🔍 Search Requests"
@@ -31,15 +33,16 @@ selected_urgency = st.selectbox(
 
 st.write("---")
 
-# --------------------
+# =========================
 # DATABASE
-# --------------------
+# =========================
 
 conn = sqlite3.connect("neighborhelp.db")
 cursor = conn.cursor()
 
 cursor.execute("""
 SELECT
+id,
 title,
 category,
 help_type,
@@ -53,40 +56,32 @@ requests = cursor.fetchall()
 
 conn.close()
 
-# --------------------
-# DISPLAY REQUESTS
-# --------------------
-
 filtered_requests = []
 
 for request in requests:
 
-    title, category, help_type, location, urgency = request
+    req_id, title, category, help_type, location, urgency = request
 
-    # Search Filter
     if search:
-        if search.lower() not in title.lower() and \
-           search.lower() not in category.lower() and \
-           search.lower() not in help_type.lower():
+        if search.lower() not in title.lower():
             continue
 
-    # Area Filter
     if selected_area != "All Areas":
         if not location.startswith(selected_area):
             continue
 
-    # Urgency Filter
     if selected_urgency != "All":
         if urgency != selected_urgency:
             continue
 
     filtered_requests.append(request)
 
-# --------------------
-# SHOW RESULTS
-# --------------------
+# =========================
+# DISPLAY
+# =========================
 
 if not filtered_requests:
+
     st.info("No matching requests found.")
 
 else:
@@ -97,26 +92,12 @@ else:
 
     for request in filtered_requests:
 
-        title, category, help_type, location, urgency = request
+        req_id, title, category, help_type, location, urgency = request
 
-        if urgency == "High":
+        with st.container():
 
-            st.error(f"""
-📌 {title}
-
-🏷️ Category: {category}
-
-🤝 Help Needed: {help_type}
-
-📍 Location: {location}
-
-⚡ Urgency: {urgency}
-""")
-
-        elif urgency == "Medium":
-
-            st.warning(f"""
-📌 {title}
+            st.markdown(f"""
+### 📌 {title}
 
 🏷️ Category: {category}
 
@@ -127,16 +108,22 @@ else:
 ⚡ Urgency: {urgency}
 """)
 
-        else:
+            col1, col2 = st.columns(2)
 
-            st.success(f"""
-📌 {title}
+            with col1:
+                if st.button(
+                    f"❤️ Volunteer to Help #{req_id}"
+                ):
+                    st.success(
+                        "Volunteer request submitted!"
+                    )
 
-🏷️ Category: {category}
+            with col2:
+                if st.button(
+                    f"✔ Mark Resolved #{req_id}"
+                ):
+                    st.success(
+                        "Request marked as resolved!"
+                    )
 
-🤝 Help Needed: {help_type}
-
-📍 Location: {location}
-
-⚡ Urgency: {urgency}
-""")
+            st.write("---")
