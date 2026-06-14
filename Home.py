@@ -208,3 +208,8 @@ st.markdown("""
 
 ✅ Hyperlocal Support
 """)
+st.write("---")
+
+st.caption(
+    "NeighborHelp © 2026 | Community Support Platform"
+)
