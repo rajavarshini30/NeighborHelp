@@ -1,37 +1,84 @@
 import streamlit as st
+import sqlite3
+
+st.set_page_config(
+    page_title="Community Feed",
+    page_icon="🏘️"
+)
 
 st.title("🏘️ Community Feed")
 
-col1, col2 = st.columns(2)
+st.write("View nearby help requests from your community.")
 
-with col1:
-    st.info("""
-🪜 Need Ladder
+# Connect to database
+conn = sqlite3.connect("neighborhelp.db")
+cursor = conn.cursor()
 
-📍 Habsiguda
-
-📏 1.2 KM Away
-
-⚡ High Priority
+# Get all requests
+cursor.execute("""
+SELECT
+title,
+category,
+help_type,
+location,
+urgency
+FROM requests
+ORDER BY id DESC
 """)
 
-with col2:
-    st.success("""
-📚 Need Math Tutor
+requests = cursor.fetchall()
 
-📍 Uppal
+conn.close()
 
-📏 2.3 KM Away
+if not requests:
+    st.info("No requests available yet.")
+else:
 
-⚡ Medium Priority
-""")
+    for request in requests:
 
-st.warning("""
-🐶 Pet Sitting Needed
+        title, category, help_type, location, urgency = request
 
-📍 Tarnaka
+        if urgency == "High":
+            st.error(
+                f"""
+📌 {title}
 
-📏 3 KM Away
+🏷️ Category: {category}
 
-⚡ Low Priority
-""")
+🤝 Help Needed: {help_type}
+
+📍 Location: {location}
+
+⚡ Urgency: {urgency}
+"""
+            )
+
+        elif urgency == "Medium":
+            st.warning(
+                f"""
+📌 {title}
+
+🏷️ Category: {category}
+
+🤝 Help Needed: {help_type}
+
+📍 Location: {location}
+
+⚡ Urgency: {urgency}
+"""
+            )
+
+        else:
+            st.success(
+                f"""
+📌 {title}
+
+🏷️ Category: {category}
+
+🤝 Help Needed: {help_type}
+
+📍 Location: {location}
+
+⚡ Urgency: {urgency}
+"""
+            )
