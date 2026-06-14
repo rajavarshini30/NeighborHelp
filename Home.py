@@ -7,27 +7,37 @@ st.set_page_config(
     layout="wide"
 )
 
-# Database Connection
-conn = sqlite3.connect("neighborhelp.db")
-cursor = conn.cursor()
+# ---------------------------
+# DATABASE COUNTS
+# ---------------------------
 
-# Count Requests
-cursor.execute("SELECT COUNT(*) FROM requests")
-request_count = cursor.fetchone()[0]
+request_count = 0
+offer_count = 0
 
-# Count Offers
-cursor.execute("SELECT COUNT(*) FROM offers")
-offer_count = cursor.fetchone()[0]
+try:
+    conn = sqlite3.connect("neighborhelp.db")
+    cursor = conn.cursor()
 
-conn.close()
+    cursor.execute("SELECT COUNT(*) FROM requests")
+    request_count = cursor.fetchone()[0]
 
-# -------------------
-# UI
-# -------------------
+    cursor.execute("SELECT COUNT(*) FROM offers")
+    offer_count = cursor.fetchone()[0]
+
+    conn.close()
+
+except Exception as e:
+    st.error(f"Database Error: {e}")
+
+# ---------------------------
+# HOME PAGE
+# ---------------------------
 
 st.title("🤝 NeighborHelp")
 
-st.subheader("Helping Neighbors, Building Communities")
+st.markdown("""
+### Helping Neighbors, Building Communities
+""")
 
 st.write("---")
 
@@ -42,43 +52,57 @@ with col2:
 col3, col4 = st.columns(2)
 
 with col3:
-    st.error("🚨 Emergency")
+    st.error("🚨 Emergency Assistance")
 
 with col4:
     st.warning("🏘️ Community Groups")
 
 st.write("---")
 
-st.subheader("📊 Live Community Statistics")
+st.subheader("📊 Live Statistics")
 
 c1, c2, c3 = st.columns(3)
 
 with c1:
     st.metric(
-        "📝 Total Requests",
-        request_count
+        label="📝 Total Requests",
+        value=request_count
     )
 
 with c2:
     st.metric(
-        "🤲 Total Helpers",
-        offer_count
+        label="🤲 Total Offers",
+        value=offer_count
     )
 
 with c3:
     st.metric(
-        "👥 Community Members",
-        request_count + offer_count
+        label="📈 Total Activity",
+        value=request_count + offer_count
     )
 
 st.write("---")
 
-st.subheader("🌟 Top Community Heroes")
+st.subheader("🌟 Community Heroes")
 
-st.write("🥇 Community Hero")
-st.write("🥈 Trusted Neighbor")
-st.write("🥉 Active Helper")
+st.success("🥇 Community Hero")
+st.info("🥈 Trusted Neighbor")
+st.warning("🥉 Active Helper")
 
-st.success(
-    "Welcome to NeighborHelp! Use the sidebar to navigate."
-)
+st.write("---")
+
+st.markdown("""
+### 📍 Features
+
+✅ Request Help
+
+✅ Offer Help
+
+✅ Emergency Assistance
+
+✅ Community Feed
+
+✅ Trust Building
+
+✅ Hyperlocal Support
+""")
