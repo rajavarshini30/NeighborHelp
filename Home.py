@@ -1,4 +1,5 @@
 import streamlit as st
+import sqlite3
 
 st.set_page_config(
     page_title="NeighborHelp",
@@ -6,31 +7,29 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown("""
-<style>
+# Database Connection
+conn = sqlite3.connect("neighborhelp.db")
+cursor = conn.cursor()
 
-.main {
-    background-color: #f8fafc;
-}
+# Count Requests
+cursor.execute("SELECT COUNT(*) FROM requests")
+request_count = cursor.fetchone()[0]
 
-h1 {
-    text-align:center;
-}
+# Count Offers
+cursor.execute("SELECT COUNT(*) FROM offers")
+offer_count = cursor.fetchone()[0]
 
-.stMetric {
-    background-color:white;
-    padding:15px;
-    border-radius:10px;
-}
+conn.close()
 
-</style>
-""", unsafe_allow_html=True)
+# -------------------
+# UI
+# -------------------
 
 st.title("🤝 NeighborHelp")
 
 st.subheader("Helping Neighbors, Building Communities")
 
-st.write("")
+st.write("---")
 
 col1, col2 = st.columns(2)
 
@@ -50,27 +49,36 @@ with col4:
 
 st.write("---")
 
-st.subheader("📊 Community Statistics")
+st.subheader("📊 Live Community Statistics")
 
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    st.metric("👥 Users", "250")
+    st.metric(
+        "📝 Total Requests",
+        request_count
+    )
 
 with c2:
-    st.metric("📝 Requests", "120")
+    st.metric(
+        "🤲 Total Helpers",
+        offer_count
+    )
 
 with c3:
-    st.metric("🤲 Helpers", "85")
+    st.metric(
+        "👥 Community Members",
+        request_count + offer_count
+    )
 
 st.write("---")
 
 st.subheader("🌟 Top Community Heroes")
 
-st.write("🥇 Rahul - 120 Points")
-st.write("🥈 Priya - 110 Points")
-st.write("🥉 Arjun - 95 Points")
+st.write("🥇 Community Hero")
+st.write("🥈 Trusted Neighbor")
+st.write("🥉 Active Helper")
 
-st.write("---")
-
-st.success("Welcome to NeighborHelp! Use the sidebar to access all features.")
+st.success(
+    "Welcome to NeighborHelp! Use the sidebar to navigate."
+)
