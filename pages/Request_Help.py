@@ -1,5 +1,6 @@
 import streamlit as st
 import sqlite3
+from locations import HYDERABAD_AREAS
 
 st.set_page_config(page_title="Request Help", page_icon="📝")
 
@@ -23,11 +24,13 @@ st.markdown("""
 
 st.title("📝 Request Help")
 
+# Request Title
 title = st.text_input(
     "📌 Request Title",
     placeholder="Example: Need a Ladder for Painting"
 )
 
+# Category
 category = st.selectbox(
     "🏷️ Select Category",
     [
@@ -48,20 +51,33 @@ if category == "Other":
         "✏️ Enter Custom Category"
     )
 
+# Help Type
 help_type = st.text_input(
     "🤝 Type of Help Needed",
     placeholder="Example: Ladder, Math Tutor, Dog Walker"
 )
 
+# Description
 description = st.text_area(
     "📝 Describe Your Request"
 )
 
-location = st.text_input(
-    "📍 Location",
-    placeholder="Example: Habsiguda"
+# Location
+st.subheader("📍 Location Details")
+
+area = st.selectbox(
+    "Select Hyderabad Area",
+    HYDERABAD_AREAS
 )
 
+exact_location = st.text_input(
+    "Apartment / Landmark / Hotel / Street",
+    placeholder="Example: Shakti Sai Nagar, Plot 91"
+)
+
+location = f"{area} - {exact_location}"
+
+# Radius
 radius = st.slider(
     "📏 Help Radius (KM)",
     min_value=1,
@@ -69,12 +85,14 @@ radius = st.slider(
     value=3
 )
 
+# Urgency
 urgency = st.radio(
     "⚡ Urgency Level",
     ["Low", "Medium", "High"],
     horizontal=True
 )
 
+# Submit
 if st.button("🚀 Submit Request"):
 
     final_category = (
