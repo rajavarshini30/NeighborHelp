@@ -11,9 +11,9 @@ st.set_page_config(
 
 st.title("👤 User Profile")
 
-st.write("""
-Manage your NeighborHelp profile and safety information.
-""")
+st.write(
+    "Manage your NeighborHelp profile and emergency contact information."
+)
 
 st.write("---")
 
@@ -32,7 +32,7 @@ if profile_pic:
 st.write("---")
 
 # =====================================
-# PERSONAL DETAILS
+# PERSONAL INFORMATION
 # =====================================
 
 st.subheader("👤 Personal Information")
@@ -128,7 +128,7 @@ st.success("📧 Email Verification Enabled")
 
 st.info("🪪 Government ID Verification (Future Feature)")
 
-st.success("🔞 Age Requirement Passed")
+st.success("🔞 Minimum Age Requirement: 16+")
 
 st.write("---")
 
@@ -177,7 +177,7 @@ with col3:
 st.write("---")
 
 # =====================================
-# ACTIVITY STATS
+# ACTIVITY STATISTICS
 # =====================================
 
 st.subheader("📊 Activity Statistics")
