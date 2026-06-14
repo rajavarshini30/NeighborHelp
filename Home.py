@@ -13,9 +13,11 @@ st.set_page_config(
 
 request_count = 0
 offer_count = 0
+community_count = 0
 
 recent_requests = []
 recent_offers = []
+recent_communities = []
 
 try:
 
@@ -30,6 +32,10 @@ try:
     cursor.execute("SELECT COUNT(*) FROM offers")
     offer_count = cursor.fetchone()[0]
 
+    # Community Count
+    cursor.execute("SELECT COUNT(*) FROM communities")
+    community_count = cursor.fetchone()[0]
+
     # Recent Requests
     cursor.execute("""
     SELECT title, location
@@ -37,7 +43,6 @@ try:
     ORDER BY id DESC
     LIMIT 5
     """)
-
     recent_requests = cursor.fetchall()
 
     # Recent Offers
@@ -47,13 +52,20 @@ try:
     ORDER BY id DESC
     LIMIT 5
     """)
-
     recent_offers = cursor.fetchall()
+
+    # Recent Communities
+    cursor.execute("""
+    SELECT community_name, community_type, plan
+    FROM communities
+    ORDER BY id DESC
+    LIMIT 5
+    """)
+    recent_communities = cursor.fetchall()
 
     conn.close()
 
 except Exception as e:
-
     st.error(f"Database Error: {e}")
 
 # =====================================
@@ -116,7 +128,7 @@ st.write("---")
 
 st.subheader("📊 Live Statistics")
 
-c1, c2, c3 = st.columns(3)
+c1, c2, c3, c4 = st.columns(4)
 
 with c1:
     st.metric(
@@ -134,6 +146,12 @@ with c3:
     st.metric(
         "📈 Total Activity",
         request_count + offer_count
+    )
+
+with c4:
+    st.metric(
+        "🏘️ Communities",
+        community_count
     )
 
 st.write("---")
@@ -188,23 +206,21 @@ st.write("---")
 
 st.subheader("🏘️ Active Communities")
 
-st.success("""
-🏢 Shakti Sai Nagar
+if recent_communities:
 
-📍 Mallapur
+    for name, ctype, plan in recent_communities:
+
+        st.success(f"""
+🏢 {name}
+
+🏘️ Type: {ctype}
+
+💳 Plan: {plan}
 """)
 
-st.info("""
-🏢 Green Valley Residency
+else:
 
-📍 Kompally
-""")
-
-st.warning("""
-🏫 ABC Student Hostel
-
-📍 Gachibowli
-""")
+    st.info("No communities available yet.")
 
 st.write("---")
 
