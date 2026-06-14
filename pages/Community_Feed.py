@@ -2,20 +2,26 @@ import streamlit as st
 
 st.title("🏘️ Community Feed")
 
-st.markdown("### Nearby Requests")
+col1, col2 = st.columns(2)
 
-st.info("""
+with col1:
+    st.info("""
 🪜 Need Ladder
 
-📍 1.2 KM Away
+📍 Habsiguda
+
+📏 1.2 KM Away
 
 ⚡ High Priority
 """)
 
-st.success("""
+with col2:
+    st.success("""
 📚 Need Math Tutor
 
-📍 2.5 KM Away
+📍 Uppal
+
+📏 2.3 KM Away
 
 ⚡ Medium Priority
 """)
@@ -23,7 +29,9 @@ st.success("""
 st.warning("""
 🐶 Pet Sitting Needed
 
-📍 3 KM Away
+📍 Tarnaka
+
+📏 3 KM Away
 
 ⚡ Low Priority
 """)

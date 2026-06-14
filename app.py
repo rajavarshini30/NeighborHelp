@@ -13,17 +13,14 @@ st.markdown("""
     background-color: #f8fafc;
 }
 
-.card {
-    padding: 20px;
-    border-radius: 15px;
-    background-color: white;
-    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
-    text-align: center;
-    margin-bottom: 20px;
-}
-
 h1 {
     text-align:center;
+}
+
+.stMetric {
+    background-color:white;
+    padding:15px;
+    border-radius:10px;
 }
 
 </style>
@@ -31,11 +28,7 @@ h1 {
 
 st.title("🤝 NeighborHelp")
 
-st.markdown(
-"""
-### Helping Neighbors, Building Communities
-"""
-)
+st.subheader("Helping Neighbors, Building Communities")
 
 st.write("")
 
@@ -62,13 +55,13 @@ st.subheader("📊 Community Statistics")
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    st.metric("Users", "250")
+    st.metric("👥 Users", "250")
 
 with c2:
-    st.metric("Requests", "120")
+    st.metric("📝 Requests", "120")
 
 with c3:
-    st.metric("Helpers", "85")
+    st.metric("🤲 Helpers", "85")
 
 st.write("---")
 
@@ -77,3 +70,7 @@ st.subheader("🌟 Top Community Heroes")
 st.write("🥇 Rahul - 120 Points")
 st.write("🥈 Priya - 110 Points")
 st.write("🥉 Arjun - 95 Points")
+
+st.write("---")
+
+st.success("Welcome to NeighborHelp! Use the sidebar to access all features.")
