@@ -379,7 +379,7 @@ st.write("---")
 # =====================================
 
 if st.button("🏠 Continue to Home"):
-    st.switch_page("pages/🏠_Home.py")
+    st.switch_page("pages/01_🏠_Home.py")
 
 st.write("---")
 
