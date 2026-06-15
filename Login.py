@@ -47,6 +47,10 @@ if st.button("Login"):
 
     if user:
 
+        # Save logged-in user info
+        st.session_state["user_email"] = user[2]
+        st.session_state["user_name"] = user[1]
+
         st.success(
             f"✅ Welcome {user[1]}!"
         )
