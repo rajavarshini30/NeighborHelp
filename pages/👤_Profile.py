@@ -32,7 +32,10 @@ area,
 phone,
 emergency_name,
 emergency_phone,
-emergency_email
+emergency_email,
+skills,
+interests,
+availability
 FROM users
 WHERE email = ?
 """, (user_email,))
@@ -52,6 +55,18 @@ if user:
     saved_emergency_name = user[5] if user[5] else ""
     saved_emergency_phone = user[6] if user[6] else ""
     saved_emergency_email = user[7] if user[7] else ""
+    saved_skills = user[8] if user[8] else ""
+    saved_interests = user[9] if user[9] else ""
+    saved_availability = user[10] if user[10] else ""
+    
+    
+    skills = saved_skills
+    interests = saved_interests
+    availability = saved_availability
+
+    other_skill = ""
+    other_interest = ""
+    other_availability = ""
 
 else:
 
@@ -64,6 +79,18 @@ else:
     saved_emergency_name = ""
     saved_emergency_phone = ""
     saved_emergency_email = ""
+
+    saved_skills = ""
+    saved_interests = ""
+    saved_availability = ""
+
+    skills = ""
+    interests = ""
+    availability = ""
+
+    other_skill = ""
+    other_interest = ""
+    other_availability = ""
 
 # =====================================
 # HEADER
@@ -163,6 +190,111 @@ emergency_email = st.text_input(
     value=saved_emergency_email
 )
 
+# =====================================
+# SKILLS / INTERESTS / AVAILABILITY
+# =====================================
+
+if not saved_skills:
+
+    st.subheader("🛠 Skills")
+
+    skills_options = [
+        "Medicine Pickup",
+        "Grocery Shopping",
+        "Transportation",
+        "Emergency Support",
+        "Tutoring",
+        "Companionship",
+        "Home Repairs",
+        "Technology Support",
+        "Pet Care",
+        "Other"
+    ]
+
+    skills = st.selectbox(
+        "Select Skill",
+        skills_options
+    )
+
+    other_skill = ""
+
+    if skills == "Other":
+        other_skill = st.text_input(
+            "Enter Other Skill"
+        )
+
+else:
+
+    st.subheader("🛠 Skills")
+    st.success(f"🔒 {saved_skills}")
+
+st.write("---")
+
+if not saved_interests:
+
+    st.subheader("❤️ Interests")
+
+    interest_options = [
+        "Helping Seniors",
+        "Community Service",
+        "Healthcare",
+        "Education",
+        "Emergency Response",
+        "Animal Welfare",
+        "Environment",
+        "Other"
+    ]
+
+    interests = st.selectbox(
+        "Select Interest",
+        interest_options
+    )
+
+    other_interest = ""
+
+    if interests == "Other":
+        other_interest = st.text_input(
+            "Enter Other Interest"
+        )
+
+else:
+
+    st.subheader("❤️ Interests")
+    st.success(f"🔒 {saved_interests}")
+
+st.write("---")
+
+if not saved_availability:
+
+    st.subheader("🕒 Availability")
+
+    availability_options = [
+        "Morning",
+        "Afternoon",
+        "Evening",
+        "Weekdays",
+        "Weekends",
+        "24/7 Emergency",
+        "Other"
+    ]
+
+    availability = st.selectbox(
+        "Select Availability",
+        availability_options
+    )
+
+    other_availability = ""
+
+    if availability == "Other":
+        other_availability = st.text_input(
+            "Enter Other Availability"
+        )
+
+else:
+
+    st.subheader("🕒 Availability")
+    st.success(f"🔒 {saved_availability}")
+
 st.write("---")
 
 # =====================================
@@ -174,36 +306,59 @@ if st.button("💾 Save Profile"):
     conn = sqlite3.connect("neighborhelp.db")
     cursor = conn.cursor()
 
-    cursor.execute("""
-    UPDATE users
-    SET
-        full_name = ?,
-        age = ?,
-        gender = ?,
-        area = ?,
-        phone = ?,
-        emergency_name = ?,
-        emergency_phone = ?,
-        emergency_email = ?
-    WHERE email = ?
-    """,
-    (
-        name,
-        age,
-        gender,
-        area,
-        phone,
-        emergency_name,
-        emergency_phone,
-        emergency_email,
-        user_email
-    ))
+    final_skill = (
+        other_skill if skills == "Other"
+        else skills
+    )
+
+    final_interest = (
+        other_interest if interests == "Other"
+        else interests
+    )
+
+    final_availability = (
+        other_availability
+        if availability == "Other"
+        else availability
+    )
+
+    cursor.execute(
+        """
+        UPDATE users
+        SET
+            full_name = ?,
+            age = ?,
+            gender = ?,
+            area = ?,
+            phone = ?,
+            emergency_name = ?,
+            emergency_phone = ?,
+            emergency_email = ?,
+            skills = ?,
+            interests = ?,
+            availability = ?
+        WHERE email = ?
+        """,
+        (
+            name,
+            age,
+            gender,
+            area,
+            phone,
+            emergency_name,
+            emergency_phone,
+            emergency_email,
+            final_skill,
+            final_interest,
+            final_availability,
+            user_email
+        )
+    )
 
     conn.commit()
     conn.close()
 
     st.success("✅ Profile Saved Successfully!")
-
 # =====================================
 # VERIFICATION STATUS
 # =====================================
