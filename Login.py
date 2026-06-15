@@ -51,10 +51,10 @@ if st.button("Login"):
             f"✅ Welcome {user[1]}!"
         )
 
-        st.page_link(
-            "Home.py",
-            label="🏠 Enter NeighborHelp"
-        )
+        st.info("""
+Open Profile from the left sidebar.
+Then continue to Home.
+""")
 
     else:
 

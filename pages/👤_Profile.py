@@ -123,11 +123,8 @@ st.write("---")
 st.subheader("✅ Verification Status")
 
 st.success("📱 Mobile Verification Enabled")
-
 st.success("📧 Email Verification Enabled")
-
 st.info("🪪 Government ID Verification (Future Feature)")
-
 st.success("🔞 Minimum Age Requirement: 16+")
 
 st.write("---")
@@ -231,6 +228,15 @@ if st.button("💾 Save Profile"):
     st.write("🛡️ Emergency Contact:", emergency_name)
     st.write("📞 Emergency Contact Number:", emergency_phone)
     st.write("📧 Emergency Contact Email:", emergency_email)
+
+st.write("---")
+
+# =====================================
+# CONTINUE TO HOME
+# =====================================
+
+if st.button("🏠 Continue to Home"):
+    st.switch_page("Home.py")
 
 st.write("---")
 
