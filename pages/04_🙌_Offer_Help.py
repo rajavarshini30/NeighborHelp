@@ -2,7 +2,10 @@ import streamlit as st
 import sqlite3
 from locations import HYDERABAD_AREAS
 
-st.set_page_config(page_title="Offer Help", page_icon="🤲")
+st.set_page_config(
+    page_title="Offer Help",
+    page_icon="🤲"
+)
 
 st.markdown("""
 <style>
@@ -23,7 +26,13 @@ st.markdown("""
 
 st.title("🤲 Offer Help")
 
-st.success("Share your skills and help your community.")
+st.success(
+    "Share your skills and help your community."
+)
+
+# =====================================
+# SERVICE DETAILS
+# =====================================
 
 category = st.selectbox(
     "Choose Service Category",
@@ -42,6 +51,7 @@ category = st.selectbox(
 custom_service = ""
 
 if category == "Other":
+
     custom_service = st.text_input(
         "Enter Your Service"
     )
@@ -54,6 +64,10 @@ service_title = st.text_input(
 description = st.text_area(
     "Describe Your Service"
 )
+
+# =====================================
+# LOCATION
+# =====================================
 
 st.subheader("📍 Service Location")
 
@@ -72,9 +86,13 @@ location = f"{area} - {exact_location}"
 radius = st.slider(
     "Service Radius (KM)",
     1,
-    5,
+    10,
     3
 )
+
+# =====================================
+# PUBLISH SERVICE
+# =====================================
 
 if st.button("🚀 Publish Service"):
 
@@ -118,3 +136,50 @@ if st.button("🚀 Publish Service"):
     st.write("Description:", description)
     st.write("Location:", location)
     st.write("Radius:", radius, "KM")
+
+# =====================================
+# ALL PUBLISHED SERVICES
+# =====================================
+
+st.write("---")
+
+st.subheader("🌟 Community Services")
+
+conn = sqlite3.connect("neighborhelp.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+SELECT
+category,
+title,
+description,
+area,
+radius
+FROM offers
+ORDER BY id DESC
+""")
+
+offers = cursor.fetchall()
+
+conn.close()
+
+if offers:
+
+    for offer in offers:
+
+        with st.container():
+
+            st.success(f"🤲 {offer[1]}")
+
+            st.write("📂 Category:", offer[0])
+            st.write("📝 Description:", offer[2])
+            st.write("📍 Location:", offer[3])
+            st.write("📏 Service Radius:", offer[4], "KM")
+
+            st.write("---")
+
+else:
+
+    st.info(
+        "No services published yet."
+    )
