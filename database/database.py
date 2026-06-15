@@ -12,23 +12,49 @@ CREATE TABLE IF NOT EXISTS users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     full_name TEXT,
     email TEXT UNIQUE,
-    password TEXT
+    password TEXT,
+
+    age INTEGER,
+    gender TEXT,
+    area TEXT,
+    phone TEXT,
+
+    emergency_name TEXT,
+    emergency_phone TEXT,
+    emergency_email TEXT
 )
 """)
 
 # Demo Users
+
 cursor.execute("""
 INSERT OR IGNORE INTO users
-(full_name, email, password)
+(
+    full_name,
+    email,
+    password
+)
 VALUES
-('Raja Varshini', 'varshini@gmail.com', '1234')
+(
+    'Raja Varshini',
+    'varshini@gmail.com',
+    '1234'
+)
 """)
 
 cursor.execute("""
 INSERT OR IGNORE INTO users
-(full_name, email, password)
+(
+    full_name,
+    email,
+    password
+)
 VALUES
-('Ravi Kumar', 'ravi@gmail.com', '1234')
+(
+    'Ravi Kumar',
+    'ravi@gmail.com',
+    '1234'
+)
 """)
 
 # =====================================
@@ -76,28 +102,4 @@ CREATE TABLE IF NOT EXISTS communities(
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS ratings(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    helper_name TEXT,
-    rating INTEGER,
-    feedback TEXT
-)
-""")
-
-# =====================================
-# CHAT MESSAGES
-# =====================================
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS chat_messages(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    requester TEXT,
-    helper TEXT,
-    sender TEXT,
-    message TEXT
-)
-""")
-
-conn.commit()
-conn.close()
-
-print("Database created successfully.")
+    id INTEGER PRIMARY KEY AUTOINCREMENT
