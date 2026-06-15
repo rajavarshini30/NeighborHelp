@@ -1,67 +1,81 @@
 import sqlite3
 
-# =====================================
-# CONNECT DATABASE
-# =====================================
-
 conn = sqlite3.connect("neighborhelp.db")
-
 cursor = conn.cursor()
 
 # =====================================
-# REQUESTS TABLE
+# USERS
 # =====================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS requests (
+CREATE TABLE IF NOT EXISTS users(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT,
+    email TEXT UNIQUE,
+    password TEXT
+)
+""")
+
+# Demo Users
+cursor.execute("""
+INSERT OR IGNORE INTO users
+(full_name, email, password)
+VALUES
+('Raja Varshini', 'varshini@gmail.com', '1234')
+""")
+
+cursor.execute("""
+INSERT OR IGNORE INTO users
+(full_name, email, password)
+VALUES
+('Ravi Kumar', 'ravi@gmail.com', '1234')
+""")
+
+# =====================================
+# REQUESTS
+# =====================================
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS requests(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
-    category TEXT,
-    help_type TEXT,
     description TEXT,
-    location TEXT,
-    radius INTEGER,
-    urgency TEXT
+    location TEXT
 )
 """)
 
 # =====================================
-# OFFERS TABLE
+# OFFERS
 # =====================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS offers (
+CREATE TABLE IF NOT EXISTS offers(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    category TEXT,
     title TEXT,
     description TEXT,
-    area TEXT,
-    radius INTEGER
+    area TEXT
 )
 """)
 
 # =====================================
-# COMMUNITIES TABLE
+# COMMUNITIES
 # =====================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS communities (
+CREATE TABLE IF NOT EXISTS communities(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     community_name TEXT,
     community_type TEXT,
-    contact_person TEXT,
-    phone TEXT,
-    email TEXT,
     plan TEXT
 )
 """)
 
 # =====================================
-# RATINGS TABLE
+# RATINGS
 # =====================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS ratings (
+CREATE TABLE IF NOT EXISTS ratings(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     helper_name TEXT,
     rating INTEGER,
@@ -70,11 +84,11 @@ CREATE TABLE IF NOT EXISTS ratings (
 """)
 
 # =====================================
-# DIRECT CHAT TABLE
+# CHAT MESSAGES
 # =====================================
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS chat_messages (
+CREATE TABLE IF NOT EXISTS chat_messages(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     requester TEXT,
     helper TEXT,
@@ -83,16 +97,7 @@ CREATE TABLE IF NOT EXISTS chat_messages (
 )
 """)
 
-# =====================================
-# SAVE CHANGES
-# =====================================
-
 conn.commit()
-
-# =====================================
-# CLOSE DATABASE
-# =====================================
-
 conn.close()
 
-print("✅ NeighborHelp Database Updated Successfully!")
+print("Database created successfully.")
