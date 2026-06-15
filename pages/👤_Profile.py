@@ -232,11 +232,37 @@ if st.button("💾 Save Profile"):
 st.write("---")
 
 # =====================================
-# CONTINUE TO HOME
+# PROFILE COMPLETE
 # =====================================
 
-if st.button("🏠 Continue to Home"):
-    st.switch_page("Home.py")
+st.success("""
+✅ Profile Setup Complete
+
+Your profile and emergency contact information
+have been successfully configured.
+""")
+
+st.info("""
+Use the sidebar to access:
+
+🏠 Home Dashboard
+
+📝 Request Help
+
+🤲 Offer Help
+
+🚨 Emergency Assistance
+
+🆘 SOS Alerts
+
+💬 Direct Help Chat
+
+⭐ Ratings & Trust
+
+🏢 Community Groups
+
+📊 Admin Dashboard
+""")
 
 st.write("---")
 
