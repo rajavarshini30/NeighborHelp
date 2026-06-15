@@ -1,4 +1,5 @@
 import streamlit as st
+import sqlite3
 
 st.set_page_config(
     page_title="Profile",
@@ -6,226 +7,44 @@ st.set_page_config(
 )
 
 # =====================================
-# HEADER
+# CHECK LOGIN
 # =====================================
 
-st.title("👤 User Profile")
-
-st.write(
-    "Manage your NeighborHelp profile and emergency contact information."
-)
-
-st.write("---")
+if "user_email" not in st.session_state:
+    st.error("Please login first.")
+    st.stop()
 
 # =====================================
-# PROFILE PHOTO
+# LOAD USER DATA
 # =====================================
 
-profile_pic = st.file_uploader(
-    "📷 Upload Profile Picture",
-    type=["jpg", "jpeg", "png"]
-)
+conn = sqlite3.connect("neighborhelp.db")
+cursor = conn.cursor()
 
-if profile_pic:
-    st.image(profile_pic, width=180)
+cursor.execute("""
+SELECT
+full_name,
+age,
+gender,
+area,
+phone,
+emergency_name,
+emergency_phone,
+emergency_email
+FROM users
+WHERE email = ?
+""", (st.session_state["user_email"],))
 
-st.write("---")
+user_data = cursor.fetchone()
 
-# =====================================
-# PERSONAL INFORMATION
-# =====================================
+conn.close()
 
-st.subheader("👤 Personal Information")
+if user_data:
 
-name = st.text_input(
-    "Full Name",
-    placeholder="Enter your full name"
-)
+    saved_name = user_data[0] or ""
+    saved_age = user_data[1] or 18
+    saved_gender = user_data[2] or "Prefer Not To Say"
+    saved_area = user_data[3] or ""
+    saved_phone = user_data[4] or ""
 
-age = st.number_input(
-    "Age",
-    min_value=16,
-    max_value=100,
-    value=18
-)
-
-gender = st.selectbox(
-    "Gender",
-    [
-        "Male",
-        "Female",
-        "Other",
-        "Prefer Not To Say"
-    ]
-)
-
-area = st.text_input(
-    "Area",
-    placeholder="Example: Mallapur"
-)
-
-phone = st.text_input(
-    "Mobile Number",
-    max_chars=10,
-    placeholder="10 Digit Mobile Number"
-)
-
-phone_valid = (
-    phone.isdigit() and len(phone) == 10
-    if phone
-    else False
-)
-
-if phone and not phone_valid:
-    st.error("❌ Mobile Number must contain exactly 10 digits.")
-
-st.write("---")
-
-# =====================================
-# EMERGENCY CONTACT
-# =====================================
-
-st.subheader("🛡️ Emergency Contact (Optional)")
-
-emergency_name = st.text_input(
-    "Emergency Contact Name",
-    placeholder="Example: Parent / Spouse / Friend"
-)
-
-emergency_phone = st.text_input(
-    "Emergency Contact Number",
-    max_chars=10,
-    placeholder="10 Digit Mobile Number"
-)
-
-emergency_email = st.text_input(
-    "Emergency Contact Email",
-    placeholder="example@gmail.com"
-)
-
-emergency_phone_valid = (
-    emergency_phone.isdigit() and len(emergency_phone) == 10
-    if emergency_phone
-    else False
-)
-
-if emergency_phone and not emergency_phone_valid:
-    st.error(
-        "❌ Emergency Contact Number must contain exactly 10 digits."
-    )
-
-st.write("---")
-
-# =====================================
-# VERIFICATION STATUS
-# =====================================
-
-st.subheader("✅ Verification Status")
-
-st.success("📱 Mobile Verification Enabled")
-st.success("📧 Email Verification Enabled")
-st.info("🪪 Government ID Verification (Future Feature)")
-st.success("🔞 Minimum Age Requirement: 16+")
-
-st.write("---")
-
-# =====================================
-# TRUST SCORE
-# =====================================
-
-st.subheader("⭐ Trust Score")
-
-st.metric(
-    "Community Trust Score",
-    "4.8 / 5"
-)
-
-st.write("---")
-
-# =====================================
-# BADGES
-# =====================================
-
-st.subheader("🏆 Community Badges")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.success("""
-🥇 Community Hero
-
-50+ Successful Helps
-""")
-
-with col2:
-    st.info("""
-🤝 Trusted Neighbor
-
-High Community Rating
-""")
-
-with col3:
-    st.warning("""
-🚨 Emergency Responder
-
-10+ Emergency Assists
-""")
-
-st.write("---")
-
-# =====================================
-# ACTIVITY STATISTICS
-# =====================================
-
-st.subheader("📊 Activity Statistics")
-
-c1, c2, c3, c4 = st.columns(4)
-
-with c1:
-    st.metric("📝 Requests", "3")
-
-with c2:
-    st.metric("🤲 Offers", "1")
-
-with c3:
-    st.metric("🚨 Emergencies", "2")
-
-with c4:
-    st.metric("🏘️ Communities", "1")
-
-st.write("---")
-
-# =====================================
-# SAVE PROFILE
-# =====================================
-
-if st.button("💾 Save Profile"):
-
-    if not name.strip():
-        st.error("❌ Please enter your name.")
-        st.stop()
-
-    if not phone_valid:
-        st.error("❌ Enter a valid 10-digit mobile number.")
-        st.stop()
-
-    if emergency_phone and not emergency_phone_valid:
-        st.error("❌ Enter a valid emergency contact number.")
-        st.stop()
-
-    st.success("✅ Profile Saved Successfully!")
-
-st.write("---")
-
-# =====================================
-# CONTINUE TO HOME
-# =====================================
-
-if st.button("🏠 Continue to Home"):
-    st.switch_page("pages/🏠_Home.py")
-
-st.write("---")
-
-st.caption(
-    "NeighborHelp © 2026 | Community Support Platform"
-)
+   
