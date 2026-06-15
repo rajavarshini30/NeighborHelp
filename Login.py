@@ -55,7 +55,7 @@ if st.button("Login"):
             f"✅ Welcome {user[1]}!"
         )
 
-        st.switch_page("pages/02_👤_Profile.py")
+      st.switch_page("pages/02_👤_Profile.py")
 
     else:
 
