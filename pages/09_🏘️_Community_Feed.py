@@ -9,16 +9,18 @@ st.set_page_config(
 
 st.title("🏘️ Community Feed")
 
-st.write("View nearby help requests from your community.")
+st.write(
+    "View nearby help requests and community services."
+)
 
 st.write("---")
 
-# =========================
+# =====================================
 # FILTERS
-# =========================
+# =====================================
 
 search = st.text_input(
-    "🔍 Search Requests"
+    "🔍 Search"
 )
 
 selected_area = st.selectbox(
@@ -26,16 +28,13 @@ selected_area = st.selectbox(
     ["All Areas"] + HYDERABAD_AREAS
 )
 
-selected_urgency = st.selectbox(
-    "⚡ Filter by Urgency",
-    ["All", "Low", "Medium", "High"]
-)
-
 st.write("---")
 
-# =========================
-# DATABASE
-# =========================
+# =====================================
+# HELP REQUESTS
+# =====================================
+
+st.header("📌 Help Requests")
 
 conn = sqlite3.connect("neighborhelp.db")
 cursor = conn.cursor()
@@ -54,9 +53,7 @@ ORDER BY id DESC
 
 requests = cursor.fetchall()
 
-conn.close()
-
-filtered_requests = []
+request_count = 0
 
 for request in requests:
 
@@ -70,33 +67,11 @@ for request in requests:
         if not location.startswith(selected_area):
             continue
 
-    if selected_urgency != "All":
-        if urgency != selected_urgency:
-            continue
+    request_count += 1
 
-    filtered_requests.append(request)
+    with st.container():
 
-# =========================
-# DISPLAY
-# =========================
-
-if not filtered_requests:
-
-    st.info("No matching requests found.")
-
-else:
-
-    st.success(
-        f"Found {len(filtered_requests)} request(s)"
-    )
-
-    for request in filtered_requests:
-
-        req_id, title, category, help_type, location, urgency = request
-
-        with st.container():
-
-            st.markdown(f"""
+        st.markdown(f"""
 ### 📌 {title}
 
 🏷️ Category: {category}
@@ -108,22 +83,99 @@ else:
 ⚡ Urgency: {urgency}
 """)
 
-            col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2)
 
-            with col1:
-                if st.button(
-                    f"❤️ Volunteer to Help #{req_id}"
-                ):
-                    st.success(
-                        "Volunteer request submitted!"
-                    )
+        with col1:
+            if st.button(
+                f"❤️ Volunteer #{req_id}"
+            ):
+                st.success(
+                    "Volunteer request submitted!"
+                )
 
-            with col2:
-                if st.button(
-                    f"✔ Mark Resolved #{req_id}"
-                ):
-                    st.success(
-                        "Request marked as resolved!"
-                    )
+        with col2:
+            if st.button(
+                f"✔ Resolve #{req_id}"
+            ):
+                st.success(
+                    "Request marked resolved!"
+                )
 
-            st.write("---")
+        st.write("---")
+
+if request_count == 0:
+    st.info("No help requests found.")
+
+# =====================================
+# COMMUNITY HELPERS
+# =====================================
+
+st.header("🤲 Community Helpers")
+
+cursor.execute("""
+SELECT
+id,
+category,
+title,
+description,
+area,
+radius
+FROM offers
+ORDER BY id DESC
+""")
+
+offers = cursor.fetchall()
+
+helper_count = 0
+
+for offer in offers:
+
+    offer_id, category, title, description, area, radius = offer
+
+    if search:
+        if search.lower() not in title.lower():
+            continue
+
+    if selected_area != "All Areas":
+        if not area.startswith(selected_area):
+            continue
+
+    helper_count += 1
+
+    with st.container():
+
+        st.markdown(f"""
+### 🤲 {title}
+
+🏷️ Category: {category}
+
+📝 Description: {description}
+
+📍 Location: {area}
+
+📏 Service Radius: {radius} KM
+""")
+
+        if st.button(
+            f"📞 Contact Helper #{offer_id}"
+        ):
+            st.success(
+                "Helper contact request sent!"
+            )
+
+        st.write("---")
+
+if helper_count == 0:
+    st.info("No community helpers found.")
+
+conn.close()
+
+# =====================================
+# FOOTER
+# =====================================
+
+st.write("---")
+
+st.caption(
+    "NeighborHelp © 2026 | Community Support Platform"
+)
