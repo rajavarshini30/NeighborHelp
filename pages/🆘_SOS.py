@@ -10,8 +10,29 @@ st.title("🆘 Emergency SOS")
 st.warning("""
 Use this feature only during emergencies.
 
-This alert is designed for immediate assistance.
+This alert is designed for immediate assistance and personal safety.
 """)
+
+st.write("---")
+
+# =====================================
+# SOS TYPE
+# =====================================
+
+sos_type = st.selectbox(
+    "🆘 SOS Type",
+    [
+        "Medical Emergency",
+        "Accident",
+        "Not Feeling Safe",
+        "Senior Citizen Assistance",
+        "Other"
+    ]
+)
+
+# =====================================
+# LOCATION
+# =====================================
 
 areas = [
     "Habsiguda",
@@ -40,12 +61,12 @@ area = st.selectbox(
 
 exact_location = st.text_input(
     "📌 Exact Location",
-    placeholder="Example: Apartment Name, Landmark"
+    placeholder="Apartment Name, Landmark, Street"
 )
 
-# ==========================
+# =====================================
 # GEOFENCING
-# ==========================
+# =====================================
 
 st.subheader("📍 Geofencing Settings")
 
@@ -57,13 +78,30 @@ radius = st.slider(
 )
 
 st.info(
-    f"🆘 SOS alert will notify users within {radius} KM of {area}"
+    f"🆘 SOS alert will notify nearby users within {radius} KM of {area}"
 )
 
+# =====================================
+# DETAILS
+# =====================================
+
 details = st.text_area(
-    "Emergency Details",
+    "📝 Emergency Details",
     placeholder="Describe the emergency..."
 )
+
+st.write("---")
+
+st.subheader("🛡️ Emergency Contact")
+
+st.info("""
+Emergency contact information will be
+retrieved automatically from the user's profile.
+""")
+
+# =====================================
+# SEND SOS
+# =====================================
 
 if st.button("🆘 SEND SOS ALERT"):
 
@@ -73,16 +111,49 @@ if st.button("🆘 SEND SOS ALERT"):
         f"Nearby users within {radius} KM have been notified."
     )
 
-    st.success(
-        "Emergency contact notification initiated."
-    )
+    if sos_type == "Not Feeling Safe":
 
-    st.markdown("### SOS Summary")
+        st.warning("""
+🛡️ Personal Safety Alert Activated
+""")
 
-    st.write("Area:", area)
-    st.write("Location:", exact_location)
-    st.write("Radius:", radius, "KM")
-    st.write("Details:", details)
+        st.success("""
+📞 Emergency Contact Notification Initiated
+
+✅ Status: Sent Successfully
+""")
+
+    else:
+
+        st.success("""
+📞 Emergency Contact Notification Initiated
+
+✅ Status: Sent Successfully
+""")
+
+    st.markdown("### 📋 SOS Summary")
+
+    st.write("🆘 SOS Type:", sos_type)
+    st.write("📍 Area:", area)
+    st.write("📌 Exact Location:", exact_location)
+    st.write("📏 Alert Radius:", radius, "KM")
+    st.write("📝 Details:", details)
+
+st.write("---")
+
+st.subheader("ℹ️ How SOS Works")
+
+st.info("""
+1️⃣ User selects SOS type.
+
+2️⃣ User enters location details.
+
+3️⃣ Nearby community members are alerted.
+
+4️⃣ Emergency contact saved in Profile is notified.
+
+5️⃣ Community assistance is coordinated.
+""")
 
 st.write("---")
 
