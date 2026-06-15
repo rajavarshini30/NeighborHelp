@@ -68,7 +68,7 @@ if user:
     other_interest = ""
     other_availability = ""
 
-eelse:
+else:
 
     saved_name = ""
     saved_age = 18
