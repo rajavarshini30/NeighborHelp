@@ -215,54 +215,14 @@ if st.button("💾 Save Profile"):
 
     st.success("✅ Profile Saved Successfully!")
 
-    st.markdown("### 📋 Profile Summary")
-
-    st.write("👤 Name:", name)
-    st.write("🎂 Age:", age)
-    st.write("⚧ Gender:", gender)
-    st.write("📍 Area:", area)
-    st.write("📞 Mobile:", phone)
-
-    st.write("---")
-
-    st.write("🛡️ Emergency Contact:", emergency_name)
-    st.write("📞 Emergency Contact Number:", emergency_phone)
-    st.write("📧 Emergency Contact Email:", emergency_email)
-
 st.write("---")
 
 # =====================================
-# PROFILE COMPLETE
+# CONTINUE TO HOME
 # =====================================
 
-st.success("""
-✅ Profile Setup Complete
-
-Your profile and emergency contact information
-have been successfully configured.
-""")
-
-st.info("""
-Use the sidebar to access:
-
-🏠 Home Dashboard
-
-📝 Request Help
-
-🤲 Offer Help
-
-🚨 Emergency Assistance
-
-🆘 SOS Alerts
-
-💬 Direct Help Chat
-
-⭐ Ratings & Trust
-
-🏢 Community Groups
-
-📊 Admin Dashboard
-""")
+if st.button("🏠 Continue to Home"):
+    st.switch_page("pages/🏠_Home.py")
 
 st.write("---")
 
